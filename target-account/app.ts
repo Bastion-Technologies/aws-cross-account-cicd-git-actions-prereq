@@ -16,10 +16,18 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import 'source-map-support/register';
-import * as cdk from '@aws-cdk/core';
-import { CrossAccountRolesStack } from './src/cdk-stack';
+import * as cdk from 'aws-cdk-lib';
 import fs from 'fs';
+import 'source-map-support/register';
+import { CrossAccountRolesStack } from './src/cdk-stack';
+
+const REGION = process.env.CDK_DEFAULT_REGION;
+const ACCOUNT = process.env.CDK_DEFAULT_ACCOUNT;
+const DEFAULT_ENV = {
+    account: ACCOUNT,
+    region: REGION,
+}
+
 
 // Read parameter file
 const params = JSON.parse(fs.readFileSync('src/cdk-stack-param.json', 'utf-8'))
@@ -28,7 +36,8 @@ const params = JSON.parse(fs.readFileSync('src/cdk-stack-param.json', 'utf-8'))
 const app = new cdk.App();
 // IAM Roles Stack
 new CrossAccountRolesStack(app, 'CrossAccountRolesStack', {
-  description: 'Creates Cross Account Role and Cloudformation Execution Roles',
-  stackName: 'cf-CrossAccountRolesStack',
-  toolsAccountUserArn: params.TOOLS_ACCOUNT_USER_ARN
+    description: 'Creates Cross Account Role and Cloudformation Execution Roles',
+    stackName: 'cf-CrossAccountRolesStack',
+    env: DEFAULT_ENV,
+    toolsAccountUserArn: params.TOOLS_ACCOUNT_USER_ARN
 });

@@ -1,3 +1,7 @@
 {
-    "CROSS_ACCOUNT_ROLE_ARN": "arn:aws:iam::<target-account-id>:role/git-action-cross-account-role"
+    "CROSS_ACCOUNT_ROLE_ARN": {
+        "dev": "arn:aws:iam::783877163647:role/git-action-cross-account-role",
+        "staging": "arn:aws:iam::453549853963:role/git-action-cross-account-role",
+        "prod": "arn:aws:iam::705906248197:role/git-action-cross-account-role"
+    }
 }
