@@ -136,13 +136,6 @@ export class CrossAccountRolesStack extends cdk.Stack {
                                     "image-publishing-role",
                                     "lookup-role"
                                 ].map(role => `arn:aws:iam::${account}:role/cdk-hnb659fds-${role}-${account}-${region}`)
-                                // [
-                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-cfn-exec-role-783877163647-us-east-1",
-                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-deploy-role-783877163647-us-east-1",
-                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-file-publishing-role-783877163647-us-east-1",
-                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-image-publishing-role-783877163647-us-east-1",
-                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-lookup-role-783877163647-us-east-1",
-                                // ]
                             }),
                             new iam.PolicyStatement({
                                 actions: [
@@ -185,6 +178,15 @@ export class CrossAccountRolesStack extends cdk.Stack {
                             new iam.PolicyStatement({
                                 actions: [
                                     'ssm:*'
+                                ],
+                                effect: iam.Effect.ALLOW,
+                                resources: [
+                                    '*'
+                                ]
+                            }),
+                            new iam.PolicyStatement({
+                                actions: [
+                                    'secretsmanager:GetSecretValue'
                                 ],
                                 effect: iam.Effect.ALLOW,
                                 resources: [
