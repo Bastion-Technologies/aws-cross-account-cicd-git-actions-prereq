@@ -94,7 +94,16 @@ export class CrossAccountRolesStack extends cdk.Stack {
                                 resources: [
                                     '*'
                                 ]
-                            })
+                            }),
+                            new iam.PolicyStatement({
+                                actions: [
+                                    'ssm:*'
+                                ],
+                                effect: iam.Effect.ALLOW,
+                                resources: [
+                                    '*'
+                                ]
+                            }),
                         ]
                     })
                 }
@@ -102,6 +111,8 @@ export class CrossAccountRolesStack extends cdk.Stack {
         )
 
         // Create a cross account role
+        const account = props?.env?.account;
+        const region = props?.env?.region;
         const crossAccountRole = new iam.Role(
             this,
             'CrossAccountRole',
@@ -115,11 +126,31 @@ export class CrossAccountRolesStack extends cdk.Stack {
                         statements: [
                             new iam.PolicyStatement({
                                 actions: [
+                                    'sts:AssumeRole'
+                                ],
+                                effect: iam.Effect.ALLOW,
+                                resources: [
+                                    "cfn-exec-role",
+                                    "deploy-role",
+                                    "file-publishing-role",
+                                    "image-publishing-role",
+                                    "lookup-role"
+                                ].map(role => `arn:aws:iam::${account}:role/cdk-hnb659fds-${role}-${account}-${region}`)
+                                // [
+                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-cfn-exec-role-783877163647-us-east-1",
+                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-deploy-role-783877163647-us-east-1",
+                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-file-publishing-role-783877163647-us-east-1",
+                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-image-publishing-role-783877163647-us-east-1",
+                                //     "arn:aws:iam::783877163647:role/cdk-hnb659fds-lookup-role-783877163647-us-east-1",
+                                // ]
+                            }),
+                            new iam.PolicyStatement({
+                                actions: [
                                     'iam:PassRole'
                                 ],
                                 effect: iam.Effect.ALLOW,
                                 resources: [
-                                    cfExecutionRole.roleArn
+                                    cfExecutionRole.roleArn,
                                 ]
                             }),
                             new iam.PolicyStatement({
@@ -150,7 +181,16 @@ export class CrossAccountRolesStack extends cdk.Stack {
                                 resources: [
                                     '*'
                                 ]
-                            })
+                            }),
+                            new iam.PolicyStatement({
+                                actions: [
+                                    'ssm:*'
+                                ],
+                                effect: iam.Effect.ALLOW,
+                                resources: [
+                                    '*'
+                                ]
+                            }),
                         ]
                     })
                 }
