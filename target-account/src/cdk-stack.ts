@@ -113,6 +113,10 @@ export class CrossAccountRolesStack extends cdk.Stack {
         // Create a cross account role
         const account = props?.env?.account;
         const region = props?.env?.region;
+        const cdkResources = getCdkResources(account, region);
+        if (region !== "us-east-1") {
+            cdkResources.push(...getCdkResources(account, "us-east-1"));
+        }
         const crossAccountRole = new iam.Role(
             this,
             'CrossAccountRole',
@@ -129,13 +133,7 @@ export class CrossAccountRolesStack extends cdk.Stack {
                                     'sts:AssumeRole'
                                 ],
                                 effect: iam.Effect.ALLOW,
-                                resources: [
-                                    "cfn-exec-role",
-                                    "deploy-role",
-                                    "file-publishing-role",
-                                    "image-publishing-role",
-                                    "lookup-role"
-                                ].map(role => `arn:aws:iam::${account}:role/cdk-hnb659fds-${role}-${account}-${region}`)
+                                resources: cdkResources,
                             }),
                             new iam.PolicyStatement({
                                 actions: [
@@ -228,4 +226,14 @@ export class CrossAccountRolesStack extends cdk.Stack {
         )
         /****************************************************************************************/
     }
+}
+
+const getCdkResources = (account?: string, region?: string) => {
+    return [
+        "cfn-exec-role",
+        "deploy-role",
+        "file-publishing-role",
+        "image-publishing-role",
+        "lookup-role"
+    ].map(role => `arn:aws:iam::${account}:role/cdk-hnb659fds-${role}-${account}-${region}`);
 }
