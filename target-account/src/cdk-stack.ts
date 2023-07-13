@@ -95,6 +95,7 @@ export class CrossAccountRolesStack extends cdk.Stack {
       description:
         "Cross account role to be assumed by Raven tools account. Used for CICD deployments only.",
       roleName: "git-action-cross-account-role",
+      maxSessionDuration: cdk.Duration.hours(12),
       inlinePolicies: {
         CrossAccountPolicy: new iam.PolicyDocument({
           assignSids: true,
